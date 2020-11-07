@@ -45,6 +45,10 @@ function init($args) {
 
       $data = json_decode($request->body);
 
+      if (empty($data->docs)) {
+        throw new Exception("PNXS - No document found - Search \"$contains\" does not match any record.");
+      }
+
       $record = $data->docs[0]->pnx->display;
 
       $recordId = $data->docs[0]->pnx->control->recordid[0];
@@ -68,14 +72,16 @@ function init($args) {
         ),
       );
     } else {
-      throw new Exception('PNXS request fail.');
+      throw new Exception('PNXS request fail');
     }
 
   }
   catch (Exception $e) {
     return array(
       'template' => 'error.html',
-      'body' => $e->getMessage()
+      'data' => array(
+        'body' => $e->getMessage(),
+      )
     );
   }
 }
