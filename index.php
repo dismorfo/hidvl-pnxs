@@ -35,7 +35,8 @@ foreach ($menu as $route => $leaf) {
     $router->$verb($route, function (...$params) use ($leaf) {
       include_once $leaf['verbs'][$_SERVER['REQUEST_METHOD']]['file'];
       if (
-        function_exists($leaf['verbs'][$_SERVER['REQUEST_METHOD']]['callback']) 
+        function_exists($leaf['verbs'][$_SERVER['REQUEST_METHOD']]['delivery']) &&
+        function_exists($leaf['verbs'][$_SERVER['REQUEST_METHOD']]['callback'])
       ) {
         call_user_func(
           $leaf['verbs'][$_SERVER['REQUEST_METHOD']]['delivery'],
