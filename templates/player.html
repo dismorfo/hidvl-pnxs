@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="content">
+    <p><a href="#">Back to search results: all Hemispheric Institute Digital Video Library</a></p>
+    <p><a href="{{primo}}">Back to the catalog page for this item</a></p>    
+    <p>{{type}}</p>
+    <h4 class="title">{{ title }}</h4>
+    <iframe src="{{playerUrl}}" title="{{title}}"></iframe>
+    <p>Cite: <a href="{{cite}}">{{cite}}</a></p>
+  </div>
+{% endblock %}
