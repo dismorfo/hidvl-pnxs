@@ -27,21 +27,38 @@ function init($args) {
 
     $contains = $pnxs_query_prefix . $noid;
 
-    $q = "q=$field,contains,$contains";
+    $q = "$field,contains,$contains";
 
     $vid = 'DLTS';
 
     $inst = 'DLTS';
 
+    $primo_context = 'L';
+
+    $lang = 'en_US';
+
     $scope = 'default_scope';
 
     $tab = 'default_tab';
+                     // https://bobcatdev.library.nyu.edu
+    $collection_home = "$bobcat_url/primo-explore/search?query=creator,contains,%22Hemispheric%20Institute%20Digital%20Video%20Library%22,AND&pfilter=pfilter,exact,video,AND&tab=all&sortby=rank&vid=$vid&lang=$lang&mode=advanced&offset=0";
 
-    $query = "$pnxs_service?vid=$vid&tab=$tab&scope=$scope&$q&inst=$inst";
-
+    $query = $pnxs_service . '?' . http_build_query(
+      array(
+        'q' => $q,        
+        'vid' => $vid,
+        'tab' => $tab,
+        'scope' => $scope,
+        'inst' => $inst,
+      )
+    );
+    
     $request = Requests::get($query);
 
-    if ($request->success && $request->status_code === 200) {
+    if (
+      $request->success && 
+      $request->status_code === 200
+    ) {
 
       $data = json_decode($request->body);
 
@@ -68,11 +85,12 @@ function init($args) {
           'contributor' => $record->contributor[0],
           'playerUrl' => $player,
           'cite' => "https://hdl.handle.net/2333.1/$noid",
-          'primo' => "$primo?docid=$recordId&context=L&vid=DLTS&lang=en_US",
+          'collection_home' => $collection_home,
+          'primo' => "$primo?docid=$recordId&context=$primo_context&vid=$vid&lang=$lang",
         ),
       );
     } else {
-      throw new Exception('PNXS request fail');
+      throw new Exception('PNXS request fail.');
     }
 
   }
@@ -80,6 +98,7 @@ function init($args) {
     return array(
       'template' => 'error.html',
       'data' => array(
+        'title' => 'Error',
         'body' => $e->getMessage(),
       )
     );

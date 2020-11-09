@@ -9,7 +9,7 @@ $router = new \Bramus\Router\Router();
 $menu = array();
 
 $menu['/hidvl/(\w+)'] = array(
-  'label' => 'View resource and metadata',
+  'label' => 'Hemispheric Institute Digital Video Library',
   'verbs' => array(
     'GET' => array(
       'file' => './routes/hidvl-metadata-player.php',
@@ -25,23 +25,25 @@ $router->set404(function () {
   echo '404, route not found!';
 });
 
+$request_method = $_SERVER['REQUEST_METHOD'];
+
 // register routes
 foreach ($menu as $route => $leaf) {
   if (
     isset($leaf['verbs']) &&
-    isset($leaf['verbs'][$_SERVER['REQUEST_METHOD']])
+    isset($leaf['verbs'][$request_method])
   ) {
-    $verb = strtolower($_SERVER['REQUEST_METHOD']);
-    $router->$verb($route, function (...$params) use ($leaf) {
-      include_once $leaf['verbs'][$_SERVER['REQUEST_METHOD']]['file'];
+    $verb = strtolower($request_method);
+    $router->$verb($route, function (...$params) use ($leaf, $request_method) {
+      include_once $leaf['verbs'][$request_method]['file'];
       if (
-        function_exists($leaf['verbs'][$_SERVER['REQUEST_METHOD']]['delivery']) &&
-        function_exists($leaf['verbs'][$_SERVER['REQUEST_METHOD']]['callback'])
+        function_exists($leaf['verbs'][$request_method]['delivery']) &&
+        function_exists($leaf['verbs'][$request_method]['callback'])
       ) {
         call_user_func(
-          $leaf['verbs'][$_SERVER['REQUEST_METHOD']]['delivery'],
+          $leaf['verbs'][$request_method]['delivery'],
           call_user_func(
-            $leaf['verbs'][$_SERVER['REQUEST_METHOD']]['callback'], 
+            $leaf['verbs'][$request_method]['callback'], 
             $params
           )
         );
