@@ -8,23 +8,19 @@ You need https://getcomposer.org/doc/00-intro.md#locally to install dependencies
 
 Must create .env with the variables:
 
+```
 APP_ROOT=/
-
 media_service=
-
 bobcat_url=
-
 pnxs_service=
-
 primo_service=
-
 pnxs_query_prefix=hidvl
-
 pnxs_search_field=lsr12
+```
 
 #### Test drive
 
-If you have PHP in your system, you can run the built-in web server. E.g., php --server localhost:5000. 
+If you have PHP in your system, you can run the built-in web server. E.g., `php --server localhost:5000`. 
 
 #### Test URL
 
