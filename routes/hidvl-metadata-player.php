@@ -60,34 +60,36 @@ function init($args) {
       $request->status_code === 200
     ) {
 
-      $data = json_decode($request->body);
+      $body = json_decode($request->body);
 
-      if (empty($data->docs)) {
+      if (empty($body->docs)) {
         throw new Exception("PNXS - No document found - Search \"$contains\" does not match any record.");
       }
 
-      $record = $data->docs[0]->pnx->display;
+      $record = $body->docs[0]->pnx->display;
 
-      $recordId = $data->docs[0]->pnx->control->recordid[0];
+      $recordId = $body->docs[0]->pnx->control->recordid[0];
+
+      $data = array(
+        'id' => $noid,
+        'recordId' => $recordId,
+        'title' => $record->title[0],
+        'description' => $record->title[0],
+        'creationdate' => $record->creationdate[0],
+        'format' => $record->format[0],
+        'subject' => $record->subject[0],
+        'language' => $record->language[0],
+        'type' => $record->type[0],
+        'contributor' => $record->contributor[0],
+        'playerUrl' => $player,
+        'cite' => "https://hdl.handle.net/2333.1/$noid",
+        'collection_home' => $collection_home,
+        'primo' => "$primo?docid=$recordId&context=$primo_context&vid=$vid&lang=$lang",
+      );
 
       return array(
         'template' => 'player.html',
-        'data' => array(
-          'id' => $noid,
-          'recordId' => $recordId,
-          'title' => $record->title[0],
-          'description' => $record->title[0],
-          'creationdate' => $record->creationdate[0],
-          'format' => $record->format[0],
-          'subject' => $record->subject[0],
-          'language' => $record->language[0],
-          'type' => $record->type[0],
-          'contributor' => $record->contributor[0],
-          'playerUrl' => $player,
-          'cite' => "https://hdl.handle.net/2333.1/$noid",
-          'collection_home' => $collection_home,
-          'primo' => "$primo?docid=$recordId&context=$primo_context&vid=$vid&lang=$lang",
-        ),
+        'data' => $data,
       );
     } else {
       throw new Exception('PNXS request fail.');
