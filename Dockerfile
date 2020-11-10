@@ -19,6 +19,6 @@ RUN docker-php-ext-install zip
 
 COPY . /var/www/html/
 
-# Install php composer
+# Install
 RUN cd /var/www/html/ \
     && /usr/bin/composer install
