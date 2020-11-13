@@ -1,2 +1,7 @@
 .env
 vendor
+scripts/token.json
+scripts/credentials.json
+dist
+datasource/*.json
+datasource/*.csv

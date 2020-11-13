@@ -14,7 +14,7 @@ $menu['/hidvl/(\w+)'] = array(
     'GET' => array(
       'file' => './routes/hidvl-metadata-player.php',
       'callback' => 'init',
-      'delivery' => 'render',
+      'delivery' => 'html',
     ),
   ),
 );
@@ -43,7 +43,7 @@ foreach ($menu as $route => $leaf) {
         call_user_func(
           $leaf['verbs'][$request_method]['delivery'],
           call_user_func(
-            $leaf['verbs'][$request_method]['callback'], 
+            $leaf['verbs'][$request_method]['callback'],
             $params
           )
         );

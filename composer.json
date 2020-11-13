@@ -4,6 +4,7 @@
     "bramus/router": "~1.4",
     "kktsvetkov/krumo": "^0.4.4",
     "rmccue/requests": "^1.7",
-    "vlucas/phpdotenv": "^5.2"
+    "vlucas/phpdotenv": "^5.2",
+    "google/apiclient": "^2.8"
   }
 }
