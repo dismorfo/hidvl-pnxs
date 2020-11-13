@@ -4,13 +4,13 @@ function init($args) {
   try {
 
     $noid = filter_var(
-      $args[0], 
-      FILTER_SANITIZE_STRING, 
+      $args[0],
+      FILTER_SANITIZE_STRING,
       FILTER_FLAG_STRIP_LOW
     );
 
     $media_service = $_ENV['media_service'];
- 
+
     $pnxs_query_prefix = $_ENV['pnxs_query_prefix'];
 
     $resource = "clip/$noid";
@@ -40,23 +40,23 @@ function init($args) {
     $scope = 'default_scope';
 
     $tab = 'default_tab';
-                     // https://bobcatdev.library.nyu.edu
+
     $collection_home = "$bobcat_url/primo-explore/search?query=creator,contains,%22Hemispheric%20Institute%20Digital%20Video%20Library%22,AND&pfilter=pfilter,exact,video,AND&tab=all&sortby=rank&vid=$vid&lang=$lang&mode=advanced&offset=0";
 
     $query = $pnxs_service . '?' . http_build_query(
       array(
-        'q' => $q,        
+        'q' => $q,
         'vid' => $vid,
         'tab' => $tab,
         'scope' => $scope,
         'inst' => $inst,
       )
     );
-    
+
     $request = Requests::get($query);
 
     if (
-      $request->success && 
+      $request->success &&
       $request->status_code === 200
     ) {
 
@@ -102,7 +102,7 @@ function init($args) {
       'data' => array(
         'title' => 'Error',
         'body' => $e->getMessage(),
-      )
+      ),
     );
   }
 }
