@@ -1,16 +1,27 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <div class="content">
     <!-- 
       Other available variables:
       - creationdate, format, subject, language, type and contributor
     -->
-    <p><a href="{{collection_home}}">Back to search results: all Hemispheric Institute Digital Video Library</a></p>
-    <p><a href="{{primo}}">Back to the catalog page for this item</a></p>    
-    <p>{{type}}</p>
-    <h4 class="title">{{ title }}</h4>
-    <iframe src="{{playerUrl}}" title="{{title}}"></iframe>
-    <p>Cite: <a href="{{cite}}">{{cite}}</a></p>
-  </div>
+    <nav class="nav-hidvl px-2 mb-4 d-flex flex-column-reverse flex-sm-row justify-content-between">
+      <div class="back-to-bobcat">
+        <a href="{{collection_home}}"><span style="font-size: 1.1rem; ">&#8249;</span> Back to search results: all Hemispheric Institute Digital Video Library</a><br>
+        <a href="{{primo}}"><span style="font-size: 1.1rem; ">&#8249;</span>  Back to the catalog page for this item</a>
+      </div>
+      <div class="library-logo align-self-end align-self-sm-start" aria-label="NYU Libraries home page">
+        <a class="mt-2 mb-3 mx-auto" href="https://bobcat.library.nyu.edu">NYU Libraries</a>
+      </div>
+    </nav> 
+    <main class="flex-grow-1  container px-0 px-sm-4 mx-auto ">
+      <article class="item-container mx-auto px-0 px-sm-4 py-4">
+        <div class="metadata px-2 px-sm-0">
+          <div class="media-content-type">{{type}}</div>
+          <h1 class="item-title">{{ title }}</h1>
+        </div>
+        <iframe src="{{playerUrl}}" title="{{title}}"></iframe>
+        <div class="cite-link mt-3 px-2 px-sm-0">Cite: <a href="{{cite}}">{{cite}}</a>
+      </article>
+    </main> 
 {% endblock %}
