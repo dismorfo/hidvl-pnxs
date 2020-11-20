@@ -1,0 +1,33 @@
+<nav class="pagination is-centered" role="navigation" aria-label="pagination">
+  {% if currentPage != 1 %}
+    <a class="pagination-previous" href="?page={{currentPage - 1}}">Previous</a>
+  {% endif %}
+  {% if currentPage != maxPage %}
+    <a class="pagination-next" href="?page={{currentPage + 1}}">Next page</a>
+  {% endif %}
+  <ul class="pagination-list">
+    {% set preItemHasEllipsis = false %}
+    {% for i in range(1, maxPage) %}
+      {% if i == currentPage %}
+        <li><a class="pagination-link is-current" aria-lasbel="Goto page {{i}}">{{i}}</a></li>
+        {% set preItemHasEllipsis = false %}
+      {% elseif (i <= 1 + pageRange) or
+        (i >= maxPage - pageRange) or
+        ((currentPage - pageRange <= i) and (i <= currentPage + pageRange))
+      %}
+      <li>
+        <a class="pagination-link" aria-lasbel="Goto page {{i}}" href="?page={{i}}">{{i}}</a></li>
+        {% set preItemHasEllipsis = false %}
+        {% elseif preItemHasEllipsis == false and (
+                        (i == 1 + 1 + pageRange) or
+                        (i == maxPage - pageRange - 1) or
+                        (i == currentPage - pageRange - 1) or
+                        (i == currentPage + pageRange + 1)
+                    )
+            %}
+                <li><span class="pagination-ellipsis">&hellip;</span></li>
+                {% set preItemHasEllipsis = true %}
+            {% endif %}
+        {% endfor %}
+    </ul>
+</nav>

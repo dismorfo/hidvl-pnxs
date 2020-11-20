@@ -8,7 +8,18 @@ $router = new \Bramus\Router\Router();
 
 $menu = array();
 
-$menu['/hidvl/(\w+)'] = array(
+$menu['/'] = array(
+  'label' => 'Home - Hemispheric Institute Digital Video Library',
+  'verbs' => array(
+    'GET' => array(
+      'file' => './routes/home.php',
+      'callback' => 'home',
+      'delivery' => 'html',
+    ),
+  ),
+);
+
+$menu['/(\w+)'] = array(
   'label' => 'Hemispheric Institute Digital Video Library',
   'verbs' => array(
     'GET' => array(
@@ -19,7 +30,7 @@ $menu['/hidvl/(\w+)'] = array(
   ),
 );
 
-// Custom 404 Handler
+// Custom 404 Handler.
 $router->set404(function () {
   header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
   echo '404, route not found!';
@@ -27,7 +38,7 @@ $router->set404(function () {
 
 $request_method = $_SERVER['REQUEST_METHOD'];
 
-// register routes
+// Register routes.
 foreach ($menu as $route => $leaf) {
   if (
     isset($leaf['verbs']) &&

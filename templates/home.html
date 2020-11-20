@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="box">
+   {% for item in items %}
+     <article class="media">
+         <figure class="media-left">
+           <picture class="image is-128x128">
+              <source srcset="https://stage-sites.dlib.nyu.edu/media/api/v0/noid/{{item.noid}}/thumbnail">
+              <img src="http://sites.dlib.nyu.edu/viewer/sites/all/modules/dlts_viewer/images/loadhold.png" alt="Image not available.">
+           </picture>
+         </figure>
+         <div class="media-content">
+           <div class="content">
+             <p>
+             <strong><a href="{{appRoot}}/{{item.noid}}">{{item.title}}</a></strong> <span class="tag is-info">{{item.type}}</span>
+             <br>
+             {{item.subject}}
+             </p>
+             {% for tag in item.tags %}
+               <span class="tag is-light">{{tag}}</span>
+             {% endfor %}
+             <br/>
+             <br/>
+             <p>Permanent link: <a href="{{item.handle}}">{{item.handle}}</a></p>
+           </div>
+         </div>
+      </article>
+    {% endfor %}
+  </div>
+  <div class="box">
+    {% include 'pagination.html' %}
+  </div>
+{% endblock %}
