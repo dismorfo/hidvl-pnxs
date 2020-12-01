@@ -46,7 +46,6 @@ a:hover {
   color: #3a3a3a;
   font-size: 1.3em;
   margin: 0;
-  /* font-weight: 600; */
 }
 .media-content-type {
   color: #666666;
@@ -58,11 +57,8 @@ a:hover {
   margin-top: -2px;
   word-break: break-all;
 }
-.film-still img {
-  width: 100%;
-  height: auto;
-}
-.item-container iframe {
+
+.media-iframe iframe {
   border: none;
   position: absolute;
   top: 0;
