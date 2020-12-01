@@ -23,7 +23,6 @@ body {
 .back-to-bobcat {
   font-size: 0.85rem;
   line-height: 1.3;
-  padding-top: 2px;
 }
 .back-to-bobcat a {
   display: block;
@@ -84,7 +83,7 @@ a:hover {
   font-size: 0.8rem;
   background-repeat: no-repeat;
   background-size: contain;
-  background-position: center;
+  background-position: right;
   background-image: url("./../ui-images/nyulibraries-logo-purple.svg");
 }
 .footer {
