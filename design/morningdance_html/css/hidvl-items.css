@@ -68,7 +68,6 @@ a:hover {
 }
 .media-iframe {
   position: relative;
-  padding-bottom: 75%; /* 4:3, aspect ratio  */
 }
 
 .library-logo a {
@@ -98,4 +97,9 @@ a:hover {
 .label {
   font-weight: 600;
   font-size: 1.1em;
+}
+.prop {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
 }
