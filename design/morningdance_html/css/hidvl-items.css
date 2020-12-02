@@ -68,6 +68,7 @@ a:hover {
 }
 .media-iframe {
   position: relative;
+  background-color:#686767;
 }
 
 .library-logo a {
