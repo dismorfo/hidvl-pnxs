@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block content %}
+  <style>
+    .card-img, .card-img-bottom {
+      border-bottom-right-radius: initial;
+    }
+    .card-img, .card-img-top {
+      border-top-right-radius: initial;
+    }
+  </style>
+  <div id="home" class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1 class="display-4">Hemispheric Institute Digital Video Library</h1>
+      <p class="lead">The Hemispheric Institute Digital Video Library is an online archive of rare video documenting social performance in the Americas.</p>
+    </div>
+    <div class="container">
+      {% for item in items %}
+      <div class="card mb-3">
+        <div class="row no-gutters">
+          <div class="col-md-4">
+            <a href="{{appRoot}}/{{item.noid}}"><img src="{{media_service}}/api/v0/noid/{{item.noid}}/thumbnail" alt="" class="rounded-left card-img"></a>
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title"><a href="{{appRoot}}/{{item.noid}}">{{item.title}}</a></h5>
+              <p class="card-text">{{item.subject}}</p>
+              <p class="card-text">Permanent link: <a href="{{item.handle}}">{{item.handle}}</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="box">
+      {% include 'pagination.html' %}
+    </div>
+  </div>
+{% endblock %}

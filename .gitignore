@@ -2,3 +2,8 @@
 vendor
 credentials.json
 token.json
+scripts/token.json
+scripts/credentials.json
+dist
+datasource/*.json
+datasource/*.csv

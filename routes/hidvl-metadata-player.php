@@ -1,6 +1,14 @@
 <?php
 
-function init($args) {
+/**
+ * @file
+ * hidvl-metadata-player.php
+ */
+
+/**
+ * Player function.
+ */
+function player($args) {
   try {
 
     $noid = filter_var(
@@ -111,7 +119,7 @@ function init($args) {
       /*
        * Restrictions/Permissions.
        * Massaging as per @link https://docs.google.com/spreadsheets/d/1IZN34mWbU84Qec3z6ZkQeP65M-1L0m7Bx83W515lsZs/edit#gid=0
-       * 1) The value "Open Access" should be ignored.
+       * 1) The value "Open Access." should be ignored.
        * 2) The value with prefix "Copyright holder:" should go into the
        * copyrightHolder schema.org element.
        * 3) The prefix "Copyright holder:" should be removed.
@@ -120,7 +128,13 @@ function init($args) {
        * 5) The prefix "Contact information:"
        * should be removed.
        */
-      $rights = $record->rights[0];
+      $rights = $record->rights;
+
+      $rights_remove = array_search('Open Access.', $rights);
+
+      if ($rights_remove !== FALSE) {
+        unset($rights[$rights_remove]);
+      }
 
       // Language.
       // Note that this is a three letter ISO code, so will need to

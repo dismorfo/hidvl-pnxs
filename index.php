@@ -1,25 +1,43 @@
 <?php
 
+/**
+ * @file
+ * index.php
+ */
+
 require_once __DIR__ . '/vendor/autoload.php';
-
 require_once __DIR__ . '/include/common.php';
+use Bramus\Router\Router;
 
-$router = new \Bramus\Router\Router();
+$router = new Router();
 
-$menu = array();
+$menu = [];
 
-$menu['/hidvl/(\w+)'] = array(
+$root = $_ENV['APP_ROOT'];
+
+$menu[$root] = [
+  'label' => 'Home - Hemispheric Institute Digital Video Library',
+  'verbs' => [
+    'GET' => [
+      'file' => './routes/home.php',
+      'callback' => 'home',
+      'delivery' => 'html',
+    ],
+  ],
+];
+
+$menu["$root/(\w+)"] = [
   'label' => 'Hemispheric Institute Digital Video Library',
-  'verbs' => array(
-    'GET' => array(
+  'verbs' => [
+    'GET' => [
       'file' => './routes/hidvl-metadata-player.php',
-      'callback' => 'init',
-      'delivery' => 'render',
-    ),
-  ),
-);
+      'callback' => 'player',
+      'delivery' => 'html',
+    ],
+  ],
+];
 
-// Custom 404 Handler
+// Custom 404 Handler.
 $router->set404(function () {
   header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
   echo '404, route not found!';
@@ -27,7 +45,7 @@ $router->set404(function () {
 
 $request_method = $_SERVER['REQUEST_METHOD'];
 
-// register routes
+// Register routes.
 foreach ($menu as $route => $leaf) {
   if (
     isset($leaf['verbs']) &&
@@ -43,7 +61,7 @@ foreach ($menu as $route => $leaf) {
         call_user_func(
           $leaf['verbs'][$request_method]['delivery'],
           call_user_func(
-            $leaf['verbs'][$request_method]['callback'], 
+            $leaf['verbs'][$request_method]['callback'],
             $params
           )
         );
