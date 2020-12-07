@@ -20,8 +20,8 @@ pnxs_search_field=lsr12
 
 #### Test drive
 
-If you have PHP in your system, you can run the built-in web server. E.g., `php --server localhost:5000`. 
+If you have PHP in your system, you can run the built-in web server. E.g., `php --server localhost:5000`.
 
 #### Test URL
 
-Open the URL http://localhost:5000/hidvl/47d7wmjw and you should see a video embed, the title of the resource and other metadata requested from PNXS.
+Open the URL http://localhost:5000/47d7wmjw and you should see a video embed, the title of the resource and other metadata requested from PNXS.
