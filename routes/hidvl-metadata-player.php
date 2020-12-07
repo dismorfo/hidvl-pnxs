@@ -15,7 +15,9 @@ function init($args) {
 
     $resource = "clip/$noid";
 
-    $player = "$media_service/$resource/mode/embed";
+    $thumbnail = "$media_service/api/v0/noid/$noid/thumbnail";
+
+    $player = "$media_service/api/v0/noid/$noid/embed";
 
     $bobcat_url = $_ENV['bobcat_url'];
 
@@ -44,13 +46,13 @@ function init($args) {
     $collection_home = "$bobcat_url/primo-explore/search?query=creator,contains,%22Hemispheric%20Institute%20Digital%20Video%20Library%22,AND&pfilter=pfilter,exact,video,AND&tab=all&sortby=rank&vid=$vid&lang=$lang&mode=advanced&offset=0";
 
     $query = $pnxs_service . '?' . http_build_query(
-      array(
+      [
         'q' => $q,
         'vid' => $vid,
         'tab' => $tab,
         'scope' => $scope,
         'inst' => $inst,
-      )
+      ]
     );
 
     $request = Requests::get($query);
@@ -68,41 +70,115 @@ function init($args) {
 
       $record = $body->docs[0]->pnx->display;
 
+      // PNXS record id.
       $recordId = $body->docs[0]->pnx->control->recordid[0];
 
-      $data = array(
+      // Title.
+      $title = $record->title[0];
+
+      $author_creator = [];
+
+      // Author/Creator.
+      $contributor = $record->contributor;
+      if (
+        isset($record->contributor) &&
+        isset($contributor[0]) &&
+        !empty($contributor[0])
+      ) {
+        // As per @link https://docs.google.com/spreadsheets/d/1IZN34mWbU84Qec3z6ZkQeP65M-1L0m7Bx83W515lsZs/edit#gid=0
+        $contributor = str_replace('; Hemispheric Institute Digital Video Library.', '', $contributor[0]);
+        $author_creator = array_merge($author_creator, explode(';', $contributor));
+      }
+
+      $creator = $record->creator;
+      if (
+        isset($record->creator) &&
+        isset($creator[0]) &&
+        !empty($creator[0])
+      ) {
+        $author_creator = array_merge($author_creator, explode(';', $creator[0]));
+      }
+
+      // Publication Date.
+      $publicationdate = $record->creationdate[0];
+
+      // Description.
+      $description = $record->format[0];
+
+      // Permalink.
+      $permalink = "https://hdl.handle.net/2333.1/$noid";
+
+      /*
+       * Restrictions/Permissions.
+       * Massaging as per @link https://docs.google.com/spreadsheets/d/1IZN34mWbU84Qec3z6ZkQeP65M-1L0m7Bx83W515lsZs/edit#gid=0
+       * 1) The value "Open Access" should be ignored.
+       * 2) The value with prefix "Copyright holder:" should go into the
+       * copyrightHolder schema.org element.
+       * 3) The prefix "Copyright holder:" should be removed.
+       * 4) The value with prefix "Contact information:" should go into
+       * the address schema.org element.
+       * 5) The prefix "Contact information:"
+       * should be removed.
+       */
+      $rights = $record->rights[0];
+
+      // Language.
+      // Note that this is a three letter ISO code, so will need to
+      // be flipped to a human-readable language label.
+      $lang_code = map_language_code($record->language[0]);
+      $language = utilities_lang($lang_code);
+
+      // Summary.
+      $summary = [];
+      $og_summary = [];
+      foreach ($record->description as $text) {
+        $text = str_replace('$$Ccredits$$V', '<strong>Credits</strong>: ', $text);
+        $text = str_replace('$$Csummary$$V', '<strong>Summary</strong>: ', $text);
+        $summary[] = $text;
+        $text = str_replace('<strong>Credits</strong>: ', '', $text);
+        $text = str_replace('<strong>Summary</strong>: ', '', $text);
+        $og_summary[] = $text;
+      }
+
+      $subject = explode(';', $record->subject[0]);
+
+      $data = [
         'id' => $noid,
         'recordId' => $recordId,
-        'title' => $record->title[0],
-        'description' => $record->title[0],
-        'creationdate' => $record->creationdate[0],
+        'title' => $title,
+        'description' => $description,
+        'summary' => $summary,
+        'og_summary' => $og_summary,
+        'publicationdate' => $publicationdate,
         'format' => $record->format[0],
-        'subject' => $record->subject[0],
-        'language' => $record->language[0],
+        'subject' => $subject,
+        'language' => $language,
+        'lang_code' => $lang_code,
         'type' => $record->type[0],
-        'contributor' => $record->contributor[0],
+        'contributor' => $author_creator,
         'playerUrl' => $player,
-        'cite' => "https://hdl.handle.net/2333.1/$noid",
+        'thumbnail' => $thumbnail,
+        'cite' => $permalink,
+        'rights' => $rights,
         'collection_home' => $collection_home,
         'primo' => "$primo?docid=$recordId&context=$primo_context&vid=$vid&lang=$lang",
-      );
-
-      return array(
+      ];
+      return [
         'template' => 'player.html',
         'data' => $data,
-      );
-    } else {
+      ];
+    }
+    else {
       throw new Exception('PNXS request fail.');
     }
-
   }
   catch (Exception $e) {
-    return array(
+    return [
       'template' => 'error.html',
-      'data' => array(
+      'data' => [
         'title' => 'Error',
         'body' => $e->getMessage(),
-      ),
-    );
+      ],
+    ];
   }
 }
