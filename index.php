@@ -13,9 +13,7 @@ $router = new Router();
 
 $menu = [];
 
-$root = $_ENV['APP_ROOT'];
-
-$menu[$root] = [
+$menu['/'] = [
   'label' => 'Home - Hemispheric Institute Digital Video Library',
   'verbs' => [
     'GET' => [
@@ -26,7 +24,7 @@ $menu[$root] = [
   ],
 ];
 
-$menu["$root/(\w+)"] = [
+$menu["/(\w+)"] = [
   'label' => 'Hemispheric Institute Digital Video Library',
   'verbs' => [
     'GET' => [
