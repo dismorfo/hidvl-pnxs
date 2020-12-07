@@ -1,34 +1,41 @@
 <?php
 
+/**
+ * @file
+ * index.php
+ */
+
 require_once __DIR__ . '/vendor/autoload.php';
-
 require_once __DIR__ . '/include/common.php';
+use Bramus\Router\Router;
 
-$router = new \Bramus\Router\Router();
+$router = new Router();
 
-$menu = array();
+$menu = [];
 
-$menu['/'] = array(
+$root = $_ENV['APP_ROOT'];
+
+$menu[$root] = [
   'label' => 'Home - Hemispheric Institute Digital Video Library',
-  'verbs' => array(
-    'GET' => array(
+  'verbs' => [
+    'GET' => [
       'file' => './routes/home.php',
       'callback' => 'home',
       'delivery' => 'html',
-    ),
-  ),
-);
+    ],
+  ],
+];
 
-$menu['/(\w+)'] = array(
+$menu["$root/(\w+)"] = [
   'label' => 'Hemispheric Institute Digital Video Library',
-  'verbs' => array(
-    'GET' => array(
+  'verbs' => [
+    'GET' => [
       'file' => './routes/hidvl-metadata-player.php',
-      'callback' => 'init',
+      'callback' => 'player',
       'delivery' => 'html',
-    ),
-  ),
-);
+    ],
+  ],
+];
 
 // Custom 404 Handler.
 $router->set404(function () {

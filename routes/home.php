@@ -1,8 +1,15 @@
 <?php
 
+/**
+ * @file
+ * home.php
+ */
+
+/**
+ * Home function.
+ */
 function home() {
   try {
-
     $raw_page = isset($_GET['page']) ? $_GET['page'] : 1;
 
     $currentPage = filter_var(
@@ -11,7 +18,9 @@ function home() {
       FILTER_FLAG_STRIP_LOW
     );
 
-    $pnxs_service = 'https://bobcatdev.library.nyu.edu/primo_library/libweb/webservices/rest/primo-explore/v1/pnxs';
+    $bobcat_url = $_ENV['bobcat_url'];
+
+    $pnxs_service = "$bobcat_url/primo_library/libweb/webservices/rest/primo-explore/v1/pnxs";
 
     $vid = 'DLTS';
 
@@ -36,7 +45,7 @@ function home() {
     $offset = 0;
 
     $query = $pnxs_service . '?' . http_build_query(
-      array(
+      [
         'q' => $q,
         'vid' => $vid,
         'tab' => $tab,
@@ -44,7 +53,7 @@ function home() {
         'inst' => $inst,
         'limit' => $limit,
         'offset' => (($currentPage * $limit) - $limit),
-      )
+      ]
     );
 
     $request = Requests::get($query);
@@ -55,11 +64,11 @@ function home() {
     ) {
       $body = json_decode($request->body);
       $maxPage = $body->info->total / $limit;
-      $items = array();
+      $items = [];
       foreach ($body->docs as $doc) {
         $handle = $doc->delivery->GetIt1[0]->links[0]->link;
         $noid = str_replace('hidvl', '', $doc->pnx->search->lsr12[0]);
-        $items[] = array(
+        $items[] = [
           'handle' => $handle,
           'noid' => $noid,
           'title' => $doc->pnx->display->title[0],
@@ -68,31 +77,28 @@ function home() {
           'tags' => $doc->pnx->search->subject,
           'type' => $doc->pnx->display->type[0],
           'lds13' => $doc->pnx->display->lds13,
-        );
+        ];
       }
     }
-
-    $data = array(
-      'title' => 'Home',
-      'items' => $items,
-      'pageLimit' => $limit,
-      'currentPage' => $currentPage,
-      'maxPage' => $maxPage,
-      'pageRange' => 1,
-    );
-
-    return array(
+    return [
       'template' => 'home.html',
-      'data' => $data,
-    );
+      'data' => [
+        'title' => 'Home',
+        'items' => $items,
+        'pageLimit' => $limit,
+        'currentPage' => $currentPage,
+        'maxPage' => $maxPage,
+        'pageRange' => 1,
+      ],
+    ];
   }
   catch (Exception $e) {
-    return array(
+    return [
       'template' => 'error.html',
-      'data' => array(
+      'data' => [
         'title' => 'Error',
         'body' => $e->getMessage(),
-      ),
-    );
+      ],
+    ];
   }
 }
