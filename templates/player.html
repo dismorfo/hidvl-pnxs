@@ -11,25 +11,26 @@
   <meta name="twitter:image" content="{{thumbnail}}">
   <title>{{type | capitalize}}: {{title}}</title>
   <script type='application/ld+json'>
-    "@context": "http://schema.org/",
-    "@type": "VideoObject",
-    "name": "{{type | capitalize}}: {{title}}",
-    "creator": [
-      {% for p in contributor %}
-        {% if loop.last == false  %}
-          { "name" : "{{ p | trim }}" },
-        {% else %}
-          { "name" : "{{ p | trim }}" }
-        {% endif %}
-      {% endfor %}
-    ],
-    "dateCreated": "{{publicationdate}}",
-    "inLanguage": "{{lang_code}}",
-    "url": "{{cite}}",
-    "description": "{% for p in og_summary %}{{ p }}. {% endfor %}",
-    holdingArchive: "New York University Libraries",
-    isPartOf: "Hemispheric Institute Digital Video Library",
-  }
+    {
+      "@context": "http://schema.org/",
+      "@type": "VideoObject",
+      "name": "{{type | capitalize}}: {{title}}",
+      "creator": [
+        {% for p in contributor %}
+          {% if loop.last == false  %}
+            { "name" : "{{ p | trim }}" },
+          {% else %}
+            { "name" : "{{ p | trim }}" }
+          {% endif %}
+        {% endfor %}
+      ],
+      "dateCreated": "{{publicationdate}}",
+      "inLanguage": "{{lang_code}}",
+      "url": "{{cite}}",
+      "description": "{% for p in og_summary %}{{ p }}. {% endfor %}",
+      "holdingArchive": "New York University Libraries",
+      "isPartOf" : "Hemispheric Institute Digital Video Library"
+    }
   </script>
 {% endblock %}
 
@@ -66,8 +67,8 @@
         <div class="md">{{description}}</div>
       </div>
       <div class="media-iframe mt-3">
-        <!-- We want this to have height and width, for example, <img class="prop" src="{{thumbnail}}" width="640" height="482" role="presentation">  --> 
-        <!-- If we can't get that information, the page should still work  --> 
+        <!-- We want this to have height and width, for example, <img class="prop" src="{{thumbnail}}" width="640" height="482" role="presentation">  -->
+        <!-- If we can't get that information, the page should still work  -->
         <img class="prop" src="{{thumbnail}}" role="presentation">
         <iframe frameborder="0" width="100%" height="100%" allowfullscreen="true" src="{{playerUrl}}" title="{{title}}"></iframe>
       </div>
