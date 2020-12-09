@@ -32,6 +32,11 @@ body {
   vertical-align: middle;
   margin-right: 3px;
 }
+.back-to-bobcat svg {
+  width: .8em;
+  height: .8em;
+  fill: currentColor;
+}
 a:link,
 a:visited,
 a:active {
@@ -69,6 +74,23 @@ a:hover {
 .media-iframe {
   position: relative;
   background-color:#686767;
+  /* smallest device, Galaxy Fold */
+  min-height: 158px;
+}
+@media (min-width: 300px) { 
+  .media-iframe {
+    min-height: 200px;
+  }
+ }
+@media (min-width: 576px) { 
+  .media-iframe {
+     min-height: 250px;
+  }
+ }
+@media (min-width: 768px) { 
+  .media-iframe {
+    min-height: 353px;
+  }
 }
 
 .library-logo a {
