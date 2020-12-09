@@ -31,6 +31,11 @@ body {
   vertical-align: middle;
   margin-right: 3px;
 }
+.back-to-bobcat svg {
+  width: .8em;
+  height: .8em;
+  fill: currentColor;
+}
 a:link,
 a:visited,
 a:active {
