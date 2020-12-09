@@ -28,7 +28,6 @@ body {
   display: block;
 }
 .back-to-bobcat svg, .back-to-bobcat span{
-  display: inline-block;
   vertical-align: middle;
   margin-right: 3px;
 }
