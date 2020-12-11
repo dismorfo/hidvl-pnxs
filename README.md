@@ -10,6 +10,8 @@ App requires an environment variable file (`.env`) with the variables:
 
 ```
 APP_ROOT=/
+GA=0
+GAUA=UA-XXXXXXXX-X
 media_service=
 bobcat_url=
 pnxs_service=
