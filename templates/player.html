@@ -64,13 +64,10 @@
         <div class="media-content-type">{{type}}</div>
         <h1 class="item-title">{{title}}</h1>
         <div class="md">{{ contributor|join(', ', ' and ') }}</div>
-        <div class="md">{{description}}</div>
       </div>
       <div class="media-iframe mt-3">
-        <!-- We want this to have height and width, for example, <img class="prop" src="{{thumbnail}}" width="640" height="482" role="presentation">  -->
-        <!-- If we can't get that information, the page should still work  -->
         <img class="prop" src="{{thumbnail}}" role="presentation">
-        <iframe frameborder="0" width="100%" height="100%" allowfullscreen="true" src="{{playerUrl}}" title="{{title}}"></iframe>
+        <iframe frameborder="0" width="100%" height="100%" allow="fullscreen" src="{{playerUrl}}" title="{{title}}"></iframe>
       </div>
       <div class="metadata px-3 px-sm-0">
         <div class="md-field cite-link mt-3">
