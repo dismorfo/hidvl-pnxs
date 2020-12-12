@@ -51,7 +51,7 @@ function player($args) {
 
     $tab = 'default_tab';
 
-    $collection_home = "$bobcat_url/primo-explore/search?query=creator,contains,%22Hemispheric%20Institute%20Digital%20Video%20Library%22,AND&pfilter=pfilter,exact,video,AND&tab=all&sortby=rank&vid=$vid&lang=$lang&mode=advanced&offset=0";
+    $collection_home = "$bobcat_url/primo-explore/search?query=any,contains,%22Hemispheric%20Institute%20Digital%20Video%20Library%22&tab=default_tab&search_scope=default_scope&vid=DLTS&lang=en_US&offset=0";
 
     $query = $pnxs_service . '?' . http_build_query(
       [
@@ -87,24 +87,20 @@ function player($args) {
       $author_creator = [];
 
       // Author/Creator.
-      $contributor = $record->contributor;
-      if (
-        isset($record->contributor) &&
-        isset($contributor[0]) &&
-        !empty($contributor[0])
-      ) {
-        // As per @link https://docs.google.com/spreadsheets/d/1IZN34mWbU84Qec3z6ZkQeP65M-1L0m7Bx83W515lsZs/edit#gid=0
-        $contributor = str_replace('; Hemispheric Institute Digital Video Library.', '', $contributor[0]);
-        $author_creator = array_merge($author_creator, explode(';', $contributor));
+      if (isset($record->contributor)) {
+        $contributor = $record->contributor;
+        if ($contributor[0] && !empty($contributor[0])) {
+          // As per @link https://docs.google.com/spreadsheets/d/1IZN34mWbU84Qec3z6ZkQeP65M-1L0m7Bx83W515lsZs/edit#gid=0
+          $contributor = str_replace('; Hemispheric Institute Digital Video Library.', '', $contributor[0]);
+          $author_creator = array_merge($author_creator, explode(';', $contributor));
+        }
       }
 
-      $creator = $record->creator;
-      if (
-        isset($record->creator) &&
-        isset($creator[0]) &&
-        !empty($creator[0])
-      ) {
-        $author_creator = array_merge($author_creator, explode(';', $creator[0]));
+      if (isset($record->creator)) {
+        if (isset($creator[0]) && !empty($creator[0])) {
+          $creator = $record->creator;
+          $author_creator = array_merge($author_creator, explode(';', $creator[0]));
+        }
       }
 
       // Publication Date.
@@ -128,7 +124,10 @@ function player($args) {
        * 5) The prefix "Contact information:"
        * should be removed.
        */
-      $rights = $record->rights;
+      $rights = [];
+      if (isset($record->rights)) {
+        $rights = $record->rights;
+      }
 
       $rights_remove = array_search('Open Access.', $rights);
 
