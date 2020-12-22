@@ -10,28 +10,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="{{thumbnail}}">
   <title>{{type | capitalize}}: {{title}}</title>
-  <script type='application/ld+json'>
-    {
-      "@context": "http://schema.org/",
-      "@type": "VideoObject",
-      "name": "{{type | capitalize}}: {{title}}",
-      "creator": [
-        {% for p in contributor %}
-          {% if loop.last == false  %}
-            { "name" : "{{ p | trim }}" },
-          {% else %}
-            { "name" : "{{ p | trim }}" }
-          {% endif %}
-        {% endfor %}
-      ],
-      "dateCreated": "{{publicationdate}}",
-      "inLanguage": "{{lang_code|join(', ')}}",
-      "url": "{{cite}}",
-      "description": "{% for p in og_summary %}{{ p }}. {% endfor %}",
-      "holdingArchive": "New York University Libraries",
-      "isPartOf" : "Hemispheric Institute Digital Video Library"
-    }
-  </script>
+  {{ld|raw}}
 {% endblock %}
 
 {% block content %}

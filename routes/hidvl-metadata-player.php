@@ -10,9 +10,12 @@
  */
 
 use ISO639\ISO639;
+use Spatie\SchemaOrg\Schema;
 
 function player($args) {
   try {
+
+    $videoShema = Schema::VideoObject();
 
     $iso = new ISO639();
 
@@ -167,8 +170,21 @@ function player($args) {
 
       $subject = explode(';', $record->subject[0]);
 
+      // JSON-LS VideoObject.
+      $videoShema->name($title);
+      $videoShema->creator($author_creator);
+      $videoShema->dateCreated($publicationdate);
+      $videoShema->inLanguage($lang_code);
+      $videoShema->url($permalink);
+      $videoShema->description($og_summary);
+      $videoShema->holdingArchive('New York University Libraries');
+      $videoShema->isPartOf('Hemispheric Institute Digital Video Library');
+      $videoShema->thumbnailUrl($thumbnail);
+      $videoShema->embedUrl($permalink);
+
       $data = [
         'id' => $noid,
+        'ld' => $videoShema->toScript(),
         'recordId' => $recordId,
         'title' => $title,
         'description' => $description,
