@@ -8,8 +8,13 @@
 /**
  * Player function.
  */
+
+use ISO639\ISO639;
+
 function player($args) {
   try {
+
+    $iso = new ISO639();
 
     $noid = filter_var(
       $args[0],
@@ -138,8 +143,15 @@ function player($args) {
       // Language.
       // Note that this is a three letter ISO code, so will need to
       // be flipped to a human-readable language label.
-      $lang_code = map_language_code($record->language[0]);
-      $language = utilities_lang($lang_code);
+      $languages = [];
+      $lang_code = [];
+      if (isset($record->language[0])) {
+        $langs = explode(';', $record->language[0]);
+        foreach ($langs as $lang) {
+          $lang_code[] = $lang;
+          $languages[$lang] = $iso->languageByCode2t($lang);
+        }
+      }
 
       // Summary.
       $summary = [];
@@ -165,7 +177,7 @@ function player($args) {
         'publicationdate' => $publicationdate,
         'format' => $record->format[0],
         'subject' => $subject,
-        'language' => $language,
+        'language' => $languages,
         'lang_code' => $lang_code,
         'type' => $record->type[0],
         'contributor' => $author_creator,

@@ -25,7 +25,7 @@
         {% endfor %}
       ],
       "dateCreated": "{{publicationdate}}",
-      "inLanguage": "{{lang_code}}",
+      "inLanguage": "{{language|join(', ')}}",
       "url": "{{cite}}",
       "description": "{% for p in og_summary %}{{ p }}. {% endfor %}",
       "holdingArchive": "New York University Libraries",
@@ -87,7 +87,7 @@
         </div>
         <div class="md-field mt-2">
           <div class="label">Language</div>
-          {{language}}
+          {{ language|join(', ') }}
         </div>
         <div class="md-field mt-2">
           <div class="label">Date</div>
