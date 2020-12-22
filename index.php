@@ -7,6 +7,7 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/include/common.php';
+require_once __DIR__ . '/include/ISO639.php';
 use Bramus\Router\Router;
 
 $router = new Router();
