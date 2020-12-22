@@ -1,5 +1,11 @@
 <?php
 
+// Taken from https://github.com/matriphe/php-iso-639
+// and all credits to that repo.
+// I will try to make a pull request to add more languages
+// to the protected variable $languages since it only use Wikipedia
+// and not https://www.loc.gov/standards/iso639-2/php/code_list.php
+
 namespace ISO639;
 
 class ISO639
