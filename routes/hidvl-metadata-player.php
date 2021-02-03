@@ -59,7 +59,7 @@ function player($args) {
 
     $tab = 'default_tab';
 
-    $collection_home = "$bobcat_url/primo-explore/search?query=any,contains,%22Hemispheric%20Institute%20Digital%20Video%20Library%22&tab=default_tab&search_scope=default_scope&vid=DLTS&lang=en_US&offset=0";
+    $collection_home = "$bobcat_url/primo-explore/search?query=creator,contains,%22Hemispheric%20Institute%20Digital%20Video%20Library%22,AND&tab=default_tab&search_scope=default_scope&sortby=rank&vid=DLTS&lang=en_US&mode=simple&offset=0";
 
     $query = $pnxs_service . '?' . http_build_query(
       [
