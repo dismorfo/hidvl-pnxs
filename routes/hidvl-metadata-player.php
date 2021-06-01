@@ -181,6 +181,7 @@ function player($args) {
       $videoShema->isPartOf('Hemispheric Institute Digital Video Library');
       $videoShema->thumbnailUrl($thumbnail);
       $videoShema->embedUrl($permalink);
+      $videoShema->uploadDate(date('Y-m-d'));
 
       $data = [
         'id' => $noid,
