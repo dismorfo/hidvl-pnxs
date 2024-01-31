@@ -1,0 +1,18 @@
+{
+    "require": {
+        "twig/twig": "^2.0",
+        "bramus/router": "~1.6",
+        "rmccue/requests": "~2.0",
+        "vlucas/phpdotenv": "^5.2",
+        "spatie/schema-org": "^3.2"
+    },
+    "require-dev": {
+        "kktsvetkov/krumo": "^0.4.4",
+        "google/apiclient": "^2.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "WpOrg\\Requests\\": "vendor/rmccue/requests/library/"
+        }
+    }
+}
