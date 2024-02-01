@@ -69,7 +69,7 @@ function player($args) {
     $tab = 'DiscoveryNetwork';
 
     // @TODO: Find out the new collection home Url.
-    $collection_home = "$bobcat_url/primo-explore/search?query=creator,contains,%22Hemispheric%20Institute%20Digital%20Video%20Library%22,AND&tab=default_tab&search_scope=default_scope&sortby=rank&vid=DLTS&lang=en_US&mode=simple&offset=0";
+    $collection_home = "https://search.library.nyu.edu/discovery/search?query=any,contains,%22Hemispheric%20Institute%20Digital%20Video%20Library%22&tab=HIDVL&search_scope=HIDVL&vid=01NYU_INST:HIDVL&offset=0";
 
     $current_dir = getcwd();
 
@@ -125,7 +125,9 @@ function player($args) {
         if (substr($contributor, -1) === '.') {
           $contributor = substr($contributor, 0, -1);
         }
-        $authors[] = $contributor;
+        if (!empty($contributor)) {
+          $authors[] = $contributor;
+        }
       }
     }
 
@@ -136,7 +138,9 @@ function player($args) {
         if (substr($creator, -1) === '.') {
           $creator = substr($creator, 0, -1);
         }
-        $authors[] = $creator;
+        if (!empty($creator)) {
+          $authors[] = $creator;
+        }
       }
     }
 
@@ -258,7 +262,7 @@ function player($args) {
       'credits' => $credits,
       'rights' => $rights,
       'collection_home' => $collection_home,
-      'primo' => "$primo?docid=$recordId&context=$primo_context&vid=$vid&lang=$lang",
+      'primo' => "https://search.library.nyu.edu/permalink/01NYU_INST/1d6v258/$recordId",
     ];
 
     return [

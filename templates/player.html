@@ -42,7 +42,7 @@
       <div class="metadata px-3 px-sm-0">
         <div class="media-content-type">{{type}}</div>
         <h1 class="item-title">{{title}}</h1>
-        <div class="md">{{ contributor|join(', ', ' and ') }}</div>
+        <div class="md">{{ contributor|join(', ') }}</div>
       </div>
       <div class="media-iframe mt-3">
         <img class="prop" src="{{thumbnail}}" role="presentation">
@@ -58,7 +58,7 @@
         </div>
         <div class="md-field mt-2">
           <div class="label">Author/Creator</div>
-          {{ contributor|join(', ', ' and ') }}
+          {{ contributor|join(', ') }}
         </div>
         <div class="smd-field mt-2">
           <div class="label">Restrictions/Permissions</div>
