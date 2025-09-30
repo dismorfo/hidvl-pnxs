@@ -56,6 +56,12 @@
           <div class="label">Title</div>
           {{title}}
         </div>
+        {% if other_title %}
+          <div class="md-field mt-2">
+            <div class="label">Other title</div>
+            {{other_title}}
+          </div>
+        {% endif %}
         <div class="md-field mt-2">
           <div class="label">Author/Creator</div>
           {{ contributor|join(', ') }}
@@ -72,6 +78,12 @@
           <div class="label">Date</div>
           {{publicationdate}}
         </div>
+        {% if location %}
+          <div class="md-field mt-2">
+            <div class="label">Filming or performance location</div>
+            {{location}}
+          </div>
+        {% endif %}
         <div class="md-field mt-2">
           <div class="label">Format</div>
           {{description}}

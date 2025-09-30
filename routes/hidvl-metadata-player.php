@@ -91,6 +91,7 @@ function player($args) {
           'apikey' => $apikey,
         ]
       );
+
       $request = WpOrg\Requests\Requests::get($query);
       if (
         $request->success &&
@@ -108,6 +109,11 @@ function player($args) {
     }
 
     $record = $body->docs[0]->pnx->display;
+
+    $addtitle = '';
+    if (isset($record->addtitle) && isset($record->addtitle[0])) {
+      $addtitle = $record->addtitle[0];
+    }
 
     // PNXS record id.
     $recordId = $body->docs[0]->pnx->control->recordid[0];
@@ -202,13 +208,19 @@ function player($args) {
     // be flipped to a human-readable language label.
     $languages = [];
     $lang_code = [];
+
+    // https://nyu.atlassian.net/browse/HIDVL-749?page=com.atlassian.jira.plugin.system.issuetabpanels%3Aall-tabpanel
+    if (isset($record->lds74)) {
+      $languages = implode(', ', $record->lds74);
+    }
+ 
     if (isset($record->language)) {
       foreach ($record->language as $lang) {
         $lang_pieces = explode(";", $lang);
         foreach ($lang_pieces as $lang_piece) {
           $lang_piece = trim($lang_piece);
           $lang_code[] = $lang_piece;
-          $languages[$lang_piece] = $iso->languageByCode2t($lang_piece);
+          // $languages[$lang_piece] = $iso->languageByCode2t($lang_piece);
         }
       }
     }
@@ -241,11 +253,20 @@ function player($args) {
     $videoShema->embedUrl($permalink);
     $videoShema->uploadDate(date('Y-m-d'));
 
+    // https://nyu.atlassian.net/browse/HIDVL-754
+    // filming or performance location
+    $location = '';
+    if (isset($record->lds73) && !empty($record->lds73[0])) {
+      $location = $record->lds73[0];
+    }
+
     $data = [
       'id' => $noid,
       'ld' => $videoShema->toScript(),
       'recordId' => $recordId,
       'title' => $title,
+      'location' => $location,
+      'other_title' => $addtitle,
       'description' => $description,
       'summary' => $summary,
       'og_summary' => $og_summary,
