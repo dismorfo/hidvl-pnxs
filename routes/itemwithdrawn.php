@@ -1,6 +1,6 @@
 <?php
 
-function itemwithdrawn($args) {
+function itemwithdrawn() {
   try {
     return [
       'template' => 'item-withdrawn.html',
