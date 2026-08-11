@@ -70,7 +70,7 @@ function player($args) {
 
     $cachefile = $current_dir . '/cache/' . $noid . '.json';
 
-    if (1 == 2 && file_exists($cachefile) && (time() - filemtime($cachefile)) < 604800 && args('reset') !== 'true') {
+    if (file_exists($cachefile) && (time() - filemtime($cachefile)) < 604800 && args('reset') !== 'true') {
       $body = json_decode(
         file_get_contents($cachefile)
       );
