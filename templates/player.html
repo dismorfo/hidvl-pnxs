@@ -88,6 +88,14 @@
           <div class="label">Format</div>
           {{description}}
         </div>
+        {% if performer_note %}
+        <div class="md-field mt-2">
+          <div class="label">Performer note</div>
+            {% for note in performer_note %}
+              {{ note }}
+            {% endfor %}
+        </div>
+        {% endif %}
         <div class="md-field mt-2">
           <div class="label">Credits</div>
             {% for credit in credits %}

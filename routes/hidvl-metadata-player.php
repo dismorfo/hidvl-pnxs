@@ -8,8 +8,6 @@
 /**
  * Player function.
  */
-
-use ISO639\ISO639;
 use Spatie\SchemaOrg\Schema;
 
 function customSort($a, $b) {
@@ -26,8 +24,6 @@ function player($args) {
 
     $videoShema = Schema::VideoObject();
 
-    $iso = new ISO639();
-
     $noid = filter_var(
       $args[0],
       FILTER_UNSAFE_RAW,
@@ -42,11 +38,13 @@ function player($args) {
 
     $player = "$media_service/api/v0/noid/$noid/embed";
 
-    $bobcat_url = $_ENV['bobcat_url'];
+    // $bobcat_url = $_ENV['bobcat_url'];
+
+    // $primo = $bobcat_url . $_ENV['primo_service'];
+
+    // $primo_context = 'L';
 
     $pnxs_service = $_ENV['pnxs_service'];
-
-    $primo = $bobcat_url . $_ENV['primo_service'];
 
     $field = $_ENV['pnxs_search_field'];
 
@@ -60,22 +58,19 @@ function player($args) {
 
     $inst = '01NYU_NETWORK';
 
-    $primo_context = 'L';
-
     $lang = 'en_US';
 
     $scope = 'DiscoveryNetwork';
 
     $tab = 'DiscoveryNetwork';
 
-    // @TODO: Find out the new collection home Url.
     $collection_home = "https://search.library.nyu.edu/discovery/search?query=any,contains,%22Hemispheric%20Institute%20Digital%20Video%20Library%22&tab=HIDVL&search_scope=HIDVL&vid=01NYU_INST:HIDVL&offset=0";
 
     $current_dir = getcwd();
 
     $cachefile = $current_dir . '/cache/' . $noid . '.json';
 
-    if (file_exists($cachefile) && (time() - filemtime($cachefile)) < 604800 && args('reset') !== 'true') {
+    if (1 == 2 && file_exists($cachefile) && (time() - filemtime($cachefile)) < 604800 && args('reset') !== 'true') {
       $body = json_decode(
         file_get_contents($cachefile)
       );
@@ -150,21 +145,26 @@ function player($args) {
       }
     }
 
-    // Credits
     // https://jira.nyu.edu/browse/HIDVL-720
+    // https://nyu.atlassian.net/browse/HIDVL-769
     // response['docs'][0]['pnx']['display']['lds64']
     // response['docs'][0]['pnx']['display']['lds65']
+
+    // Performer Note
+    $performer_note = [];
+    if (isset($record->lds65) && is_array($record->lds65)) {
+      $performer_note = array_merge($performer_note, $record->lds65);
+    }
+
+    usort($performer_note, 'customSort');
+
+    // Credits
     $credits = [];
     if (isset($record->lds64) && is_array($record->lds64)) {
       $credits = array_merge($credits, $record->lds64);
     }
 
-    if (isset($record->lds65) && is_array($record->lds65)) {
-      $credits = array_merge($credits, $record->lds65);
-    }
-
     usort($credits, 'customSort');
-    
 
     // Publication Date.
     $publicationdate = $record->creationdate[0];
@@ -219,9 +219,7 @@ function player($args) {
         $lang_pieces = explode(";", $lang);
         foreach ($lang_pieces as $lang_piece) {
           $lang_piece = trim($lang_piece);
-          $lang_code[] = $lang_piece;
-          // $languages[$lang_piece] = $iso->languageByCode2t($lang_piece);
-        }
+          $lang_code[] = $lang_piece;        }
       }
     }
 
@@ -281,6 +279,7 @@ function player($args) {
       'thumbnail' => $thumbnail,
       'cite' => $permalink,
       'credits' => $credits,
+      'performer_note' => $performer_note,
       'rights' => $rights,
       'collection_home' => $collection_home,
       'primo' => "https://search.library.nyu.edu/permalink/01NYU_INST/1d6v258/$recordId",
