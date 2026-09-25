@@ -18,7 +18,11 @@ pnxs_service=
 primo_service=
 pnxs_query_prefix=hidvl
 pnxs_search_field=lsr12
+apikey=
 ```
+
+A ready-to-copy template is provided in [`.env.example`](.env.example) — run
+`cp .env.example .env` and fill in the values.
 
 #### Test drive
 

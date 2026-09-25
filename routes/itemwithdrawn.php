@@ -14,6 +14,7 @@ function itemwithdrawn() {
     ];
   }
   catch (Exception $e) {
+    log_error($e, 'itemwithdrawn');
     return [
       'template' => 'error.html',
       'data' => [

@@ -22,6 +22,24 @@ function add_common_headers() {
   header('Cache-Control: public, max-age=0, s-maxage=300', FALSE);
 }
 
+/**
+ * Logs an exception to the PHP error log (or wherever error_log() is
+ * configured to write, e.g. Apache's error log / stderr in the Docker
+ * container) so failures are visible server-side even though the user only
+ * ever sees a generic error page.
+ */
+function log_error(Throwable $e, $context = '') {
+  $prefix = $context ? "[$context] " : '';
+  error_log(sprintf(
+    '%s%s: %s in %s:%d',
+    $prefix,
+    get_class($e),
+    $e->getMessage(),
+    $e->getFile(),
+    $e->getLine()
+  ));
+}
+
 function json($data) {
   add_common_headers();
   header('Content-Type: application/json');
@@ -34,17 +52,26 @@ function html($args) {
   echo render($args);
 }
 
-function args($arg = null) {
-  // Get the value from REDIRECT_QUERY_STRING
+/**
+ * Parses the redirected query string (set by the .htaccess front-controller
+ * rewrite) into an associative array. Shared by args() and render() so the
+ * REDIRECT_QUERY_STRING parsing logic only lives in one place.
+ */
+function redirect_query_params() {
   $redirectQueryString = (isset($_SERVER['REDIRECT_QUERY_STRING']) ? $_SERVER['REDIRECT_QUERY_STRING'] : false);
 
-  if ($redirectQueryString ) {
-    // URL decode the values
-    $decodedQueryString = urldecode($redirectQueryString);
-    // Parse the query string into an array
-    parse_str($decodedQueryString, $queryParams);
-
+  if (!$redirectQueryString) {
+    return [];
   }
+
+  $decodedQueryString = urldecode($redirectQueryString);
+  parse_str($decodedQueryString, $queryParams);
+
+  return $queryParams;
+}
+
+function args($arg = null) {
+  $queryParams = redirect_query_params();
 
   if ($arg && isset($queryParams[$arg])) {
     return $queryParams[$arg];
@@ -56,16 +83,7 @@ function render($args) {
 
   $data = $args['data'];
 
-  // Get the value from REDIRECT_QUERY_STRING
-  $redirectQueryString = (isset($_SERVER['REDIRECT_QUERY_STRING']) ? $_SERVER['REDIRECT_QUERY_STRING'] : false);
-
-  if ($redirectQueryString ) {
-    // URL decode the values
-    $decodedQueryString = urldecode($redirectQueryString);
-    // Parse the query string into an array
-    parse_str($decodedQueryString, $queryParams);
-
-  }
+  $queryParams = redirect_query_params();
 
   // Validate and sanitize individual parameters
   if ((isset($queryParams['wt']) && $queryParams['wt'] == 'json') || (isset($_GET) && isset($_GET['wt']) && $_GET['wt'] == 'json')) {

@@ -22,27 +22,13 @@ function customSort($a, $b) {
 function player($args) {
   try {
 
-    $videoShema = Schema::VideoObject();
-
     $noid = filter_var(
       $args[0],
       FILTER_UNSAFE_RAW,
       FILTER_FLAG_STRIP_LOW
     );
 
-    $media_service = $_ENV['media_service'];
-
     $pnxs_query_prefix = $_ENV['pnxs_query_prefix'];
-
-    $thumbnail = "$media_service/api/v0/noid/$noid/thumbnail";
-
-    $player = "$media_service/api/v0/noid/$noid/embed";
-
-    // $bobcat_url = $_ENV['bobcat_url'];
-
-    // $primo = $bobcat_url . $_ENV['primo_service'];
-
-    // $primo_context = 'L';
 
     $pnxs_service = $_ENV['pnxs_service'];
 
@@ -58,50 +44,83 @@ function player($args) {
 
     $inst = '01NYU_NETWORK';
 
-    $lang = 'en_US';
-
     $scope = 'DiscoveryNetwork';
 
     $tab = 'DiscoveryNetwork';
-
-    $collection_home = "https://search.library.nyu.edu/discovery/search?query=any,contains,%22Hemispheric%20Institute%20Digital%20Video%20Library%22&tab=HIDVL&search_scope=HIDVL&vid=01NYU_INST:HIDVL&offset=0";
 
     $current_dir = getcwd();
 
     $cachefile = $current_dir . '/cache/' . $noid . '.json';
 
-    if (file_exists($cachefile) && (time() - filemtime($cachefile)) < 604800 && args('reset') !== 'true') {
-      $body = json_decode(
-        file_get_contents($cachefile)
-      );
-    }
-    else {
-      $query = $pnxs_service . '?' . http_build_query(
-        [
-          'q' => $q,
-          'vid' => $vid,
-          'scope' => $scope,
-          'tab' => $tab,
-          'inst' => $inst,
-          'apikey' => $apikey,
-        ]
-      );
+    $query = $pnxs_service . '?' . http_build_query(
+      [
+        'q' => $q,
+        'vid' => $vid,
+        'scope' => $scope,
+        'tab' => $tab,
+        'inst' => $inst,
+        'apikey' => $apikey,
+      ]
+    );
 
-      $request = WpOrg\Requests\Requests::get($query);
-      if (
+    $request = WpOrg\Requests\Requests::get($query);
+
+    if (
         $request->success &&
         $request->status_code === 200
-      ) {
-        
-        $body = json_decode($request->body);
+    ) {
 
-        file_put_contents($cachefile, json_encode($body));
-      }
+      $body = json_decode($request->body);
+
+      file_put_contents($cachefile, json_encode($body));
     }
 
     if (empty($body->docs)) {
       throw new Exception("PNXS - No document found - Search \"$contains\" does not match any record.");
     }
+
+    $data = build_player_data($body, $noid, $_ENV);
+
+    return [
+      'template' => 'player.html',
+      'data' => $data,
+    ];
+
+  }
+  catch (Exception $e) {
+    log_error($e, 'player');
+    return [
+      'template' => 'error.html',
+      'data' => [
+        'title' => 'Error',
+        'body' => $e->getMessage(),
+      ],
+    ];
+  }
+}
+
+/**
+ * Transforms a decoded PNXS API response body into the data array consumed
+ * by the player template. Pulled out of player() so it can be unit tested
+ * without making a real HTTP request.
+ *
+ * @param object $body Decoded PNXS JSON response (contains ->docs[0]->pnx...).
+ * @param string $noid The NOID identifier for the requested item.
+ * @param array $env Environment variables (media_service, etc.).
+ *
+ * @return array Data array for the player.html template.
+ */
+function build_player_data($body, $noid, $env) {
+
+    $videoShema = Schema::VideoObject();
+
+    $media_service = $env['media_service'];
+
+    $thumbnail = "$media_service/api/v0/noid/$noid/thumbnail";
+
+    $player = "$media_service/api/v0/noid/$noid/embed";
+
+    $collection_home = "https://search.library.nyu.edu/discovery/search?query=any,contains,%22Hemispheric%20Institute%20Digital%20Video%20Library%22&tab=HIDVL&search_scope=HIDVL&vid=01NYU_INST:HIDVL&offset=0";
 
     $record = $body->docs[0]->pnx->display;
 
@@ -166,6 +185,12 @@ function player($args) {
 
     usort($credits, 'customSort');
 
+    $time_place_of_event = [];
+    // https://nyu.atlassian.net/browse/HIDVL-768
+    if (isset($record->lds73) && is_array($record->lds73)) {
+      $time_place_of_event = array_merge($time_place_of_event, $record->lds73);
+    }
+
     // Publication Date.
     $publicationdate = $record->creationdate[0];
 
@@ -228,12 +253,20 @@ function player($args) {
     $og_summary = [];
 
     foreach ($record->description as $text) {
-      $text = str_replace('$$Ccredits$$V', '<strong>Credits</strong>: ', $text);
-      $text = str_replace('$$Csummary$$V', '<strong>Summary</strong>: ', $text);
-      $summary[] = $text;
-      $text = str_replace('<strong>Credits</strong>: ', '', $text);
-      $text = str_replace('<strong>Summary</strong>: ', '', $text);
-      $og_summary[] = $text;
+      // Strip the PNXS field-label markers to build the plain-text version
+      // used in <meta> description tags (Twig auto-escapes this on output).
+      $plain_text = str_replace(['$$Ccredits$$V', '$$Csummary$$V'], '', $text);
+      $og_summary[] = $plain_text;
+
+      // Escape the untrusted PNXS text *before* injecting our own trusted
+      // <strong> label markup, so any HTML/script content in the source
+      // record can't execute when rendered with the `raw` filter in
+      // player.html. Legitimate text (no HTML-special characters) renders
+      // byte-for-byte the same as before.
+      $safe_text = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+      $safe_text = str_replace('$$Ccredits$$V', '<strong>Credits</strong>: ', $safe_text);
+      $safe_text = str_replace('$$Csummary$$V', '<strong>Summary</strong>: ', $safe_text);
+      $summary[] = $safe_text;
     }
 
     $subject = explode(';', $record->subject[0]);
@@ -280,24 +313,11 @@ function player($args) {
       'cite' => $permalink,
       'credits' => $credits,
       'performer_note' => $performer_note,
+      'time_place_of_event' => $time_place_of_event,
       'rights' => $rights,
       'collection_home' => $collection_home,
       'primo' => "https://search.library.nyu.edu/permalink/01NYU_INST/1d6v258/$recordId",
     ];
 
-    return [
-      'template' => 'player.html',
-      'data' => $data,
-    ];
-
-  }
-  catch (Exception $e) {
-    return [
-      'template' => 'error.html',
-      'data' => [
-        'title' => 'Error',
-        'body' => $e->getMessage(),
-      ],
-    ];
-  }
+    return $data;
 }

@@ -7,11 +7,15 @@
         "spatie/schema-org": "^3.2"
     },
     "require-dev": {
-        "kktsvetkov/krumo": "^0.4.4"
+        "kktsvetkov/krumo": "^0.4.4",
+        "phpunit/phpunit": "^11"
     },
     "autoload": {
         "psr-4": {
             "WpOrg\\Requests\\": "vendor/rmccue/requests/library/"
         }
+    },
+    "scripts": {
+        "test": "phpunit"
     }
 }

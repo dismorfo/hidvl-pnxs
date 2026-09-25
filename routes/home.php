@@ -19,6 +19,7 @@ function home() {
     ];
   }
   catch (Exception $e) {
+    log_error($e, 'home');
     return [
       'template' => 'error.html',
       'data' => [

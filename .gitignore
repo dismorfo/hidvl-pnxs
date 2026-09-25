@@ -8,3 +8,4 @@ dist
 datasource/*.json
 datasource/*.csv
 cache/*.json
+.phpunit.result.cache

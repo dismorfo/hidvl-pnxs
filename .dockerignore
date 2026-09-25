@@ -1,1 +1,4 @@
 vendor
+.git
+.env
+cache/*.json

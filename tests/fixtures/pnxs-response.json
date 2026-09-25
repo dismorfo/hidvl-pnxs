@@ -1,0 +1,34 @@
+{
+  "docs": [
+    {
+      "pnx": {
+        "control": {
+          "recordid": ["991234567890"]
+        },
+        "display": {
+          "title": ["Inversión de escena (scrolling of performance synopsis : English version)"],
+          "addtitle": ["Alternate title example"],
+          "creator": ["Rosenfeld, Lotty.$$QRosenfeld, Lotty."],
+          "contributor": [
+            "Hemispheric Institute Digital Video Library.",
+            "Castillo, Juan.$$QCastillo, Juan."
+          ],
+          "creationdate": ["1979"],
+          "format": ["1 videocassette (10 min.)"],
+          "subject": ["Performance art; Chile; Politics"],
+          "type": ["video"],
+          "language": ["spa ; eng"],
+          "lds63": ["Open Access.", "Copyright holder: Hemispheric Institute"],
+          "lds64": ["Zurita, Raul, writer", "Eltit, Diamela, writer"],
+          "lds65": ["Rosenfeld, Lotty, performer", "Castillo, Juan, performer"],
+          "lds73": ["Santiago, Chile"],
+          "lds74": ["Spanish with English subtitles"],
+          "description": [
+            "$$Csummary$$VVideo documentation of a public art intervention.",
+            "$$Ccredits$$VFilmed by the Hemispheric Institute."
+          ]
+        }
+      }
+    }
+  ]
+}
