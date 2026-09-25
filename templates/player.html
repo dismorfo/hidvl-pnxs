@@ -75,14 +75,24 @@
           {{ language|join(', ') }}
         </div>
         <div class="md-field mt-2">
-          <div class="label">Date</div>
+          <div class="label">Time and/or Place of Event</div>
+            {% for item in event_time_place %}
+              <span style="display:block;">{{ item }}</span>
+            {% endfor %}
+        </div>
+        <!-- 
+        <div class="md-field mt-2">
+          <div class="label">Date</div> 
           {{publicationdate}}
         </div>
+        -->
         {% if location %}
+          <!-- 
           <div class="md-field mt-2">
             <div class="label">Filming or performance location</div>
             {{location}}
           </div>
+          -->
         {% endif %}
         <div class="md-field mt-2">
           <div class="label">Format</div>

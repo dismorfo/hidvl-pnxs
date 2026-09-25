@@ -305,6 +305,7 @@ function build_player_data($body, $noid, $env) {
       'format' => $record->format[0],
       'subject' => $subject,
       'language' => $languages,
+      'event_time_place' => $time_place_of_event,
       'lang_code' => $lang_code,
       'type' => $record->type[0],
       'contributor' => $authors,
